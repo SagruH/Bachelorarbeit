@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import PhyPraKit as ppk
+
 
 from scipy.signal import find_peaks, savgol_filter
 from scipy.stats import linregress
