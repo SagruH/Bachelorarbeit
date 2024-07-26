@@ -1,0 +1,31 @@
+Messung vom 25.7.24
+Spannung 561V mit redpitaya
+Abstand 6cm bei beiden Aufbauten
+
+Immer selbe Proben bei beiden Aufbauten
+Na22: AO-6516
+CS137: RP 476; 370 kBq
+Co60: RS 756
+Ra226:  Bt 675; 3,7kBq
+
+1. Messung 10min
+	Labor		Na22
+	Radiacode	Cs137
+2. Messung 10min
+	Labor 		Cs137
+	Radiacode	Na22
+	
+Abstand rediziert auf 1cm
+
+3. Messung 20min
+	Labor 		Co60
+	Radiacode 	Na22
+4. Messung 20min+
+	Labor 		Ra226
+	Radiacode	Co60
+5. Messung 20min
+	Labor 		Na22
+	Radiacode 	Ra226
+6.Messung 20min
+	Labor		Untergrund
+	Radiacode	Cs137

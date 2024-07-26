@@ -1,13 +1,14 @@
 import yaml
 import numpy as np
 import matplotlib.pyplot as plt
+import PhyPraKit as ppk
 
 from scipy.signal import find_peaks, savgol_filter
 #from scipy.interpolate import UnivariateSpline
 from scipy.stats import linregress
 from scipy.optimize import curve_fit
-import PhyPraKit as ppk
 
+from peak_class import *
 
 
 #-----------------------------------------------------------------
@@ -42,6 +43,20 @@ def half_max_x(x, y):
 
 def gauss(x, A=1.0, mu=1.0, sigma=1.0):
     return A*( (1 / (sigma * np.sqrt(2 * np.pi))) * np.exp(-((x - mu) ** 2) / (2 * sigma** 2)) )
+
+def gauss2( x, s=100, mu=6.0, sigma=0.5):
+    """
+    pdf of a Gaussian signal 
+    on top of flat background to fit peak with
+    
+    """
+    
+    bmin = 0
+    bmax = 1
+    normal = np.exp(-((x - mu) ** 2) / (2 * sigma** 2)) / np.sqrt(
+        2.0 * np.pi * sigma**2)
+    flat = 1.0 / (bmax - bmin)
+    return s * normal + (1 - s) * flat
 
 def poly2(x, a=1.0, b=1.0, c=1.0 ):
     return a*x**2 + b*x + c
@@ -124,33 +139,59 @@ fwhm = []
 #fit gaus phyprakit
 
 for i,j in zip([2, 0, 1, 2, 1],range(len(peak_pos))):   
+    #create baseline
+    # baseline = linregress(
+    #            np.r_[x_val[baseline_pos[j][0] : baseline_pos[j][1]],
+    #            x_val[baseline_pos[j][2] : baseline_pos[j][3]]],
+    #            np.r_[spectrum[i][baseline_pos[j][0] : baseline_pos[j][1]],
+    #            spectrum[i][baseline_pos[j][2] : baseline_pos[j][3]]] 
+    #            )
     
+    # #prepare data and substract baseline
+    # fspectrum = (spectrum[i][peak_pos[j][0] : peak_pos[j][1]] 
+    #              - (x_val[peak_pos[j][0] : peak_pos[j][1]] * baseline[0] + baseline[1]))
+    # #error on spectrum
+    # error_y = np.sqrt(spectrum[i][peak_pos[j][0] : peak_pos[j][1]])
+    # #fit
+    # fit = ppk.mnFit(fit_type="xy")
+    # fit.set_xyOptions()
+    # fit.init_xyData(x_val[peak_pos[j][0] : peak_pos[j][1]],
+    #                 fspectrum,
+    #                 ey=error_y)
+    # fit.init_xyFit(gauss, p0 = (500 , x_val[peak_channel[j]], 1) )
+    # fit.do_fit()
+
+    # gaus_fits.append(fit)
+    # baseline_fits.append([baseline[0],baseline[1]])
+
     #create baseline
     baseline = linregress(
-               np.r_[x_val[baseline_pos[j][0] : baseline_pos[j][1]],
-               x_val[baseline_pos[j][2] : baseline_pos[j][3]]],
-               np.r_[spectrum[i][baseline_pos[j][0] : baseline_pos[j][1]],
-               spectrum[i][baseline_pos[j][2] : baseline_pos[j][3]]] 
-               )
+                np.r_[x_val[baseline_pos[j][0] : baseline_pos[j][1]],
+                x_val[baseline_pos[j][2] : baseline_pos[j][3]]],
+                np.r_[spectrum[i][baseline_pos[j][0] : baseline_pos[j][1]],
+                spectrum[i][baseline_pos[j][2] : baseline_pos[j][3]]] 
+                )
     
     #prepare data and substract baseline
     fspectrum = (spectrum[i][peak_pos[j][0] : peak_pos[j][1]] 
-                 - (x_val[peak_pos[j][0] : peak_pos[j][1]] * baseline[0] + baseline[1]))
+                  - (x_val[peak_pos[j][0] : peak_pos[j][1]] * baseline[0] + baseline[1]))
     #error on spectrum
     error_y = np.sqrt(spectrum[i][peak_pos[j][0] : peak_pos[j][1]])
     #fit
-    fit = ppk.mnFit(fit_type="xy")
-    fit.set_xyOptions()
-    fit.init_xyData(x_val[peak_pos[j][0] : peak_pos[j][1]],
-                    fspectrum,
-                    ey=error_y)
-    fit.init_xyFit(gauss, p0 = (500 , x_val[peak_channel[j]], 1) )
+    
+    
+    bc,be = np.histogram(fspectrum[1:], x_val[peak_pos[j][0] : peak_pos[j][1]])
+    
+    
+    fit = ppk.mnFit(fit_type="hist")
+    fit.set_hOptions(use_GaussApprox=False, quiet=False)
+    fit.init_hData(bc, be, DeltaMu=None)
+    fit.init_hFit(gauss, p0 = (1 , x_val[peak_channel[j]], 1) )
     fit.do_fit()
+    fit.plotModel()
 
     gaus_fits.append(fit)
     baseline_fits.append([baseline[0],baseline[1]])
-
-
 
 
 #-----------------------------------------------------------------
@@ -198,7 +239,7 @@ print(fwhm)
 # Plotting
 label = ['Cs137', 'Co60', 'Na22','Ra226']
 for i,j in zip([2, 0, 1, 2, 1],range(len(peak_pos))):
-    break
+    
     i=0
     j=1
     

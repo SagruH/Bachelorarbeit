@@ -1,0 +1,42 @@
+Daten in CASSY und mit Radiacode aufnehmen
+P2 Gamma Spek Versuch beschreiben auch in Text
+Bilder machen
+
+identischer Abstand 4cm ( 2 Finger breit)
+509V an Spannungsquelle
+Verstärunk 10,24; 488mV (kein Haken bei negative Impulse) 
+1024 Kanäle
+
+Alle Messungen 300s
+
+
+
+Messung 1: Cassy 
+Co60 AO-2211
+Verstärkungsfaktor 10.24; 488mV
+
+Messung 2: Cassy
+CS137, 370kBq, RP478 
+Verstärkungsfaktor 10.24; 488mV
+
+Messung 3: Cassy
+Ra226, 3,7kBq(0,1µCi), BT675 
+Verstärkungsfaktor 10.24; 488mV
+
+Messung 4: Cassy
+Na22 AC-9246
+Verstärkungsfaktor 10.24; 488mV
+
+
+
+Messung 1: Radiacode
+CS137, 370kBq, RP478 
+
+Messung 2: Radiacode
+Co60 AO-2211
+
+Messung 3: Radiacode
+Na22 AC-9246
+
+Messung 4: Radiacode
+Ra226, 3,7kBq(0,1µCi), BT675
